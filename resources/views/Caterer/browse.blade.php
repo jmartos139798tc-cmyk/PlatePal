@@ -4,13 +4,22 @@
     $currentUser = auth()->user();
     $overviewRoute = null;
     $accountName = null;
+    $profileRoute = null;
+    $settingsRoute = null;
+    $feedbackRoute = null;
 
     if ($currentUser?->role === 'client') {
         $overviewRoute = route('client.dashboard');
         $accountName = $currentUser->name;
+        $profileRoute = route('client.settings');
+        $settingsRoute = $profileRoute.'#settings';
+        $feedbackRoute = route('client.reviews');
     } elseif ($currentUser?->role === 'caterer') {
         $overviewRoute = route('caterer.dashboard');
         $accountName = optional($currentUser->catererProfile)->business_name ?: $currentUser->name;
+        $profileRoute = route('caterer.profile.settings');
+        $settingsRoute = $profileRoute.'#settings';
+        $feedbackRoute = route('caterer.dashboard.reviews');
     }
 
     $accountInitial = $accountName ? strtoupper(substr($accountName, 0, 1)) : null;
@@ -62,19 +71,13 @@
 
             <div class="flex flex-wrap items-center gap-3">
                 @if ($currentUser)
-                    <div class="flex items-center gap-3 rounded-full border border-[#F0E2D4] bg-[#FFF8F2] px-3 py-2">
-                        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#F7661B] text-[11px] font-bold text-white">
-                            {{ $accountInitial ?: 'P' }}
-                        </span>
-                        <span class="text-[12px] font-semibold text-[#6E4B31]">{{ $accountName }}</span>
-                    </div>
-
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="inline-flex items-center justify-center rounded-full bg-[#F7661B] px-5 py-2.5 text-[12px] font-semibold text-white transition-colors hover:bg-[#DE570F]">
-                            Sign Out
-                        </button>
-                    </form>
+                    @include('shared.account-dropdown', [
+                        'name' => $accountName,
+                        'initials' => $accountInitial ?: 'P',
+                        'profileHref' => $profileRoute,
+                        'settingsHref' => $settingsRoute,
+                        'feedbackHref' => $feedbackRoute,
+                    ])
                 @else
                     <a href="{{ route('login') }}" class="inline-flex items-center gap-2 rounded-full border-2 border-[#F54900] px-4 py-2 text-[13px] font-semibold text-[#F54900] transition-all hover:bg-[#F54900] hover:text-white">
                         Sign In

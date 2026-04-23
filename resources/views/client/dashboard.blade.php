@@ -4,6 +4,9 @@
 @php
     $overviewRoute = route('client.dashboard');
     $marketplaceRoute = route('browse');
+    $profileRoute = route('client.settings');
+    $settingsRoute = $profileRoute.'#settings';
+    $feedbackRoute = route('client.reviews');
 
     $fallbackUpcomingBookings = collect([
         [
@@ -178,19 +181,13 @@
                     <a href="{{ $marketplaceRoute }}" class="rounded-full px-3 py-2 transition-colors hover:bg-[#FFF3EA] hover:text-[#F7661B]">Marketplace</a>
                 </nav>
 
-                <div class="flex items-center gap-3 rounded-full bg-[#FFF4EC] px-3 py-2">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#F7661B] text-xs font-bold text-white">
-                        {{ strtoupper(substr($user->name ?? 'J', 0, 1)) }}
-                    </span>
-                    <span class="text-[12px] font-semibold text-[#6E4B31]">{{ $user->name ?? 'Juan Dela Cruz' }}</span>
-                </div>
-
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="inline-flex items-center justify-center rounded-full bg-[#F7661B] px-5 py-2.5 text-[12px] font-semibold text-white transition-colors hover:bg-[#DE570F]">
-                        Sign Out
-                    </button>
-                </form>
+                @include('shared.account-dropdown', [
+                    'name' => $user->name ?? 'Juan Dela Cruz',
+                    'initials' => strtoupper(substr($user->name ?? 'J', 0, 1)),
+                    'profileHref' => $profileRoute,
+                    'settingsHref' => $settingsRoute,
+                    'feedbackHref' => $feedbackRoute,
+                ])
             </div>
         </div>
     </header>
@@ -217,13 +214,6 @@
                         </a>
                     @endforeach
                 </nav>
-
-                <div class="border-t border-[#EFDCCB] px-4 py-5 lg:mt-auto">
-                    <a href="{{ route('client.settings') }}" class="flex items-center gap-3 rounded-[18px] px-4 py-3 text-[14px] font-medium text-[#8B6748] transition-colors hover:bg-white/70 hover:text-[#F7661B]">
-                        <i class="fas fa-user text-[13px]"></i>
-                        <span>Account Settings</span>
-                    </a>
-                </div>
             </div>
         </aside>
 

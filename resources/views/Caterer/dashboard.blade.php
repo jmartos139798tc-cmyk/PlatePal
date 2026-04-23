@@ -176,6 +176,9 @@
     ];
     $overviewRoute = route('caterer.dashboard');
     $marketplaceRoute = route('browse');
+    $profileRoute = route('caterer.profile.settings');
+    $settingsRoute = $profileRoute.'#settings';
+    $feedbackRoute = route('caterer.dashboard.reviews');
 @endphp
 
 <div class="min-h-screen bg-[#FDF7F0] text-[#2B2118]">
@@ -196,22 +199,14 @@
                     <a href="#" class="rounded-full px-3 py-2 transition-colors hover:bg-[#FFF3EA] hover:text-[#F7661B]">Help</a>
                 </nav>
 
-                <div class="flex items-center gap-3 rounded-full border border-[#F0E2D4] bg-[#FFF8F2] px-3 py-2">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#F7661B] text-[11px] font-bold text-white">
-                        {{ $initials ?: 'PP' }}
-                    </span>
-                    <span class="leading-none">
-                        <span class="block text-[12px] font-semibold text-[#3C2F24]">{{ $businessName }}</span>
-                        <span class="mt-1 block text-[10px] text-[#A08D7D]">{{ $businessLocation }}</span>
-                    </span>
-                </div>
-
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="inline-flex items-center justify-center rounded-full px-4 py-2.5 text-[12px] font-semibold text-[#8A7868] transition-colors hover:bg-[#FFF3EA] hover:text-[#F7661B]">
-                        Sign Out
-                    </button>
-                </form>
+                @include('shared.account-dropdown', [
+                    'name' => $businessName,
+                    'initials' => $initials ?: 'PP',
+                    'subtitle' => $businessLocation,
+                    'profileHref' => $profileRoute,
+                    'settingsHref' => $settingsRoute,
+                    'feedbackHref' => $feedbackRoute,
+                ])
             </div>
         </div>
     </header>
@@ -242,13 +237,6 @@
                         </a>
                     @endforeach
                 </nav>
-
-                <div class="border-t border-[#EFDCCB] px-4 py-5 lg:mt-auto">
-                    <a href="{{ route('caterer.profile.settings') }}" class="flex items-center gap-3 rounded-[18px] px-4 py-3 text-[14px] font-medium text-[#8B6748] transition-colors hover:bg-white/70 hover:text-[#F7661B]">
-                        <i class="fas fa-user-gear text-[13px]"></i>
-                        <span>Profile Settings</span>
-                    </a>
-                </div>
             </div>
         </aside>
 
