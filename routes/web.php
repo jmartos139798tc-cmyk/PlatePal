@@ -19,34 +19,39 @@ use App\Http\Controllers\ReviewController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/browse', [HomeController::class, 'browse'])->name('browse');
 
-// Caterer Public Profile
-Route::get('/caterer/{id}', [CatererController::class, 'show'])->name('caterer.show');
-Route::get('/caterer/{id}/reviews', [CatererController::class, 'reviews'])->name('caterer.reviews');
-Route::get('/caterer/{id}/gallery', [CatererController::class, 'gallery'])->name('caterer.gallery');
-Route::get('/caterer/{id}/about', [CatererController::class, 'about'])->name('caterer.about');
+/*
+|--------------------------------------------------------------------------
+| Auth Page Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::get('/caterer/login', [AuthController::class, 'showCatererLogin'])->name('caterer.login');
+Route::get('/caterer/register', [AuthController::class, 'showCatererRegister'])->name('caterer.register');
+Route::get('/forgot-password', fn() => view('auth.forgot-password'))->name('password.request');
 
 /*
 |--------------------------------------------------------------------------
-| Auth Routes (Guest Only)
+| Auth Submission Routes (Guest Only)
 |--------------------------------------------------------------------------
 */
 
 Route::middleware('guest')->group(function () {
     // Client Auth
-    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
     // Caterer Auth
-    Route::get('/caterer/login', [AuthController::class, 'showCatererLogin'])->name('caterer.login');
     Route::post('/caterer/login', [AuthController::class, 'catererLogin'])->name('caterer.login.post');
-    Route::get('/caterer/register', [AuthController::class, 'showCatererRegister'])->name('caterer.register');
     Route::post('/caterer/register', [AuthController::class, 'catererRegister'])->name('caterer.register.post');
-
-    // Password Reset
-    Route::get('/forgot-password', fn() => view('auth.forgot-password'))->name('password.request');
 });
+
+// Caterer Public Profile
+Route::get('/caterer/{id}', [CatererController::class, 'show'])->whereNumber('id')->name('caterer.show');
+Route::get('/caterer/{id}/reviews', [CatererController::class, 'reviews'])->whereNumber('id')->name('caterer.reviews');
+Route::get('/caterer/{id}/gallery', [CatererController::class, 'gallery'])->whereNumber('id')->name('caterer.gallery');
+Route::get('/caterer/{id}/about', [CatererController::class, 'about'])->whereNumber('id')->name('caterer.about');
 
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -95,7 +100,7 @@ Route::middleware(['auth', 'role:caterer'])->prefix('dashboard')->name('caterer.
     Route::get('/menu', [CatererDashboardController::class, 'menu'])->name('menu');
     Route::post('/menu', [CatererDashboardController::class, 'updateMenu'])->name('menu.update');
     Route::get('/messages', [CatererDashboardController::class, 'messages'])->name('messages');
-    Route::get('/reviews', [CatererDashboardController::class, 'reviews'])->name('reviews');
+    Route::get('/reviews', [CatererDashboardController::class, 'reviews'])->name('dashboard.reviews');
     Route::get('/earnings', [CatererDashboardController::class, 'earnings'])->name('earnings');
     Route::get('/profile-settings', [CatererDashboardController::class, 'profileSettings'])->name('profile.settings');
     Route::post('/profile-settings', [CatererDashboardController::class, 'updateProfile'])->name('profile.update');
@@ -106,5 +111,3 @@ Route::middleware('auth')->group(function () {
     Route::get('/messages/{userId}', [MessageController::class, 'show'])->name('messages.show');
     Route::post('/messages/{userId}', [MessageController::class, 'send'])->name('messages.send');
 });
-
-

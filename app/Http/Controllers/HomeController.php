@@ -20,7 +20,11 @@ class HomeController extends Controller
 
     public function browse(Request $request)
     {
-        $query = CatererProfile::withCount('reviews')->withAvg('reviews', 'rating');
+        $query = CatererProfile::query()
+            ->withCount('reviews')
+            ->withAvg('reviews', 'rating')
+            ->orderByDesc('is_featured')
+            ->orderBy('business_name');
 
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -48,12 +52,48 @@ class HomeController extends Controller
             }
         }
 
-        if ($request->filled('rating')) {
-            $query->havingRaw('AVG(reviews.rating) >= ?', [$request->rating]);
+        $selectedCuisines = collect($request->input('cuisine', []))
+            ->filter()
+            ->values();
+
+        if ($selectedCuisines->isNotEmpty()) {
+            $query->where(function ($q) use ($selectedCuisines) {
+                foreach ($selectedCuisines as $cuisine) {
+                    $q->orWhere('cuisine_type', 'like', '%'.$cuisine.'%');
+                }
+            });
         }
 
-        $caterers = $query->paginate(6);
+        if ($request->filled('rating')) {
+            $query->whereRaw(
+                'COALESCE((select avg(reviews.rating) from reviews where reviews.caterer_profile_id = caterer_profiles.id), 0) >= ?',
+                [(float) $request->rating]
+            );
+        }
 
-        return view('Caterer.browse', compact('caterers'));
+        $caterers = $query->paginate(6)->withQueryString();
+
+        $availableBarangays = CatererProfile::query()
+            ->whereNotNull('barangay')
+            ->where('barangay', '!=', '')
+            ->orderBy('barangay')
+            ->pluck('barangay')
+            ->unique()
+            ->values();
+
+        $availableCuisines = CatererProfile::query()
+            ->whereNotNull('cuisine_type')
+            ->where('cuisine_type', '!=', '')
+            ->orderBy('cuisine_type')
+            ->pluck('cuisine_type')
+            ->unique()
+            ->values();
+
+        return view('Caterer.browse', compact(
+            'caterers',
+            'availableBarangays',
+            'availableCuisines',
+            'selectedCuisines'
+        ));
     }
 }

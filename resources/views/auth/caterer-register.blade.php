@@ -1,57 +1,289 @@
 {{-- Resources/views/auth/caterer-register.blade.php --}}
 <x-layouts.app :title="'Caterer Registration - PlatePal'">
 
-<div style="max-width:560px;margin:60px auto;padding:32px;background:var(--white);border-radius:12px;box-shadow:var(--shadow);">
-    <h2 style="font-size:24px;font-weight:700;margin-bottom:8px;">Join as a Caterer</h2>
-    <p class="text-muted mb-4">Create your caterer profile and start receiving bookings</p>
+<div class="min-h-screen bg-white">
+    <div class="flex min-h-screen w-full flex-col lg:flex-row">
+        <section class="flex w-full bg-white lg:min-h-screen lg:w-1/2 lg:justify-end">
+            <div class="w-full px-6 py-8 sm:px-10 sm:py-10 lg:max-w-[590px] lg:px-14 lg:py-14 xl:px-20">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <a href="{{ route('home') }}" class="flex items-center gap-2.5 text-[#221F2D] transition-opacity hover:opacity-80">
+                        <i class="fas fa-utensils text-[17px] text-[#F54900]"></i>
+                        <span class="text-[16px] font-bold tracking-[0.08em] text-[#1E1E1E]">PLATEPAL</span>
+                    </a>
 
-    <form method="POST" action="{{ route('caterer.register.post') }}">
-        @csrf
-        <div class="row g-3">
-            <div class="col-12">
-                <label class="form-label">Business Name</label>
-                <input type="text" name="business_name" class="form-control" required autofocus>
-            </div>
-            <div class="col-12">
-                <label class="form-label">Your Name</label>
-                <input type="text" name="name" class="form-control" required>
-            </div>
-            <div class="col-12">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" required>
-            </div>
-            <div class="col-12">
-                <label class="form-label">Phone</label>
-                <input type="text" name="phone" class="form-control" required>
-            </div>
-            <div class="col-12">
-                <label class="form-label">Barangay</label>
-                <select name="barangay" class="form-control" required>
-                    <option value="">Select Barangay</option>
-                    <option>Magugpo Poblacion</option>
-                    <option>Apokon</option>
-                    <option>Visayan Village</option>
-                    <option>Nueva Fuerza</option>
-                    <option>Mankilam</option>
-                </select>
-            </div>
-            <div class="col-12">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" required>
-            </div>
-            <div class="col-12">
-                <label class="form-label">Confirm Password</label>
-                <input type="password" name="password_confirmation" class="form-control" required>
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary w-100">Create Account</button>
-            </div>
-        </div>
-    </form>
+                    <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-[14px] font-medium text-[#8B8B8B] transition-colors hover:text-[#F54900]">
+                        <i class="fas fa-arrow-left text-[10px]"></i>
+                        <span>Back to Home</span>
+                    </a>
+                </div>
 
-    <p class="mt-3 text-center fs-sm">
-        Already have a caterer account? <a href="{{ route('caterer.login') }}">Sign In</a>
-    </p>
+                <div class="mt-10 max-w-[360px] sm:mt-12 lg:mt-16">
+                    <h1 class="text-[30px] font-extrabold leading-tight text-[#1F2937] sm:text-[33px]">
+                        Join as a Caterer
+                    </h1>
+                    <p class="mt-2 text-[15px] leading-7 text-[#6B7280]">
+                        Start growing your catering business with PlatePal
+                    </p>
+
+                    @if (session('error'))
+                        <div class="mt-5 rounded-xl border border-[#D6DAE5] bg-[#F4F6FA] px-4 py-3 text-sm text-[#334155]">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="mt-5 rounded-xl border border-[#D6DAE5] bg-[#F4F6FA] px-4 py-3 text-sm text-[#334155]">
+                            <ul class="space-y-1">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('caterer.register.post') }}" class="mt-7 space-y-4">
+                        @csrf
+
+                        <div>
+                            <label for="business_name" class="mb-2 block text-[13px] font-semibold text-[#2B2B2B]">Business Name</label>
+                            <input
+                                id="business_name"
+                                type="text"
+                                name="business_name"
+                                value="{{ old('business_name') }}"
+                                autocomplete="organization"
+                                placeholder="Lola Maria's Kitchen"
+                                class="w-full rounded-[7px] border border-[#E4E4E4] bg-[#F3F4F6] px-4 py-[10px] text-[13px] text-[#1F2937] outline-none transition-all placeholder:text-[#A0A0A0] focus:border-[#111827] focus:bg-white focus:ring-2 focus:ring-[#111827]/10"
+                                required
+                                autofocus
+                            >
+                            @error('business_name')
+                                <p class="mt-2 text-xs font-medium text-[#DC2626]">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="name" class="mb-2 block text-[13px] font-semibold text-[#2B2B2B]">Owner's Full Name</label>
+                            <input
+                                id="name"
+                                type="text"
+                                name="name"
+                                value="{{ old('name') }}"
+                                autocomplete="name"
+                                placeholder="Maria Santos"
+                                class="w-full rounded-[7px] border border-[#E4E4E4] bg-[#F3F4F6] px-4 py-[10px] text-[13px] text-[#1F2937] outline-none transition-all placeholder:text-[#A0A0A0] focus:border-[#111827] focus:bg-white focus:ring-2 focus:ring-[#111827]/10"
+                                required
+                            >
+                            @error('name')
+                                <p class="mt-2 text-xs font-medium text-[#DC2626]">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="email" class="mb-2 block text-[13px] font-semibold text-[#2B2B2B]">Email Address</label>
+                            <input
+                                id="email"
+                                type="email"
+                                name="email"
+                                value="{{ old('email') }}"
+                                autocomplete="email"
+                                placeholder="you@example.com"
+                                class="w-full rounded-[7px] border border-[#E4E4E4] bg-[#F3F4F6] px-4 py-[10px] text-[13px] text-[#1F2937] outline-none transition-all placeholder:text-[#A0A0A0] focus:border-[#111827] focus:bg-white focus:ring-2 focus:ring-[#111827]/10"
+                                required
+                            >
+                            @error('email')
+                                <p class="mt-2 text-xs font-medium text-[#DC2626]">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="phone" class="mb-2 block text-[13px] font-semibold text-[#2B2B2B]">Phone Number</label>
+                            <input
+                                id="phone"
+                                type="text"
+                                name="phone"
+                                value="{{ old('phone') }}"
+                                autocomplete="tel"
+                                placeholder="0912 345 6789"
+                                class="w-full rounded-[7px] border border-[#E4E4E4] bg-[#F3F4F6] px-4 py-[10px] text-[13px] text-[#1F2937] outline-none transition-all placeholder:text-[#A0A0A0] focus:border-[#111827] focus:bg-white focus:ring-2 focus:ring-[#111827]/10"
+                                required
+                            >
+                            @error('phone')
+                                <p class="mt-2 text-xs font-medium text-[#DC2626]">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="barangay" class="mb-2 block text-[13px] font-semibold text-[#2B2B2B]">Barangay</label>
+                            <input
+                                id="barangay"
+                                type="text"
+                                name="barangay"
+                                value="{{ old('barangay') }}"
+                                list="barangay-options"
+                                placeholder="Enter your barangay"
+                                class="w-full rounded-[7px] border border-[#E4E4E4] bg-[#F3F4F6] px-4 py-[10px] text-[13px] text-[#1F2937] outline-none transition-all placeholder:text-[#A0A0A0] focus:border-[#111827] focus:bg-white focus:ring-2 focus:ring-[#111827]/10"
+                                required
+                            >
+                            <datalist id="barangay-options">
+                                <option value="Magugpo Poblacion"></option>
+                                <option value="Apokon"></option>
+                                <option value="Visayan Village"></option>
+                                <option value="Nueva Fuerza"></option>
+                                <option value="Mankilam"></option>
+                            </datalist>
+                            @error('barangay')
+                                <p class="mt-2 text-xs font-medium text-[#DC2626]">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="password" class="mb-2 block text-[13px] font-semibold text-[#2B2B2B]">Password</label>
+                            <div class="relative">
+                                <input
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    autocomplete="new-password"
+                                    placeholder="Create a strong password"
+                                    class="w-full rounded-[7px] border border-[#E4E4E4] bg-[#F3F4F6] px-4 py-[10px] pr-14 text-[13px] text-[#1F2937] outline-none transition-all placeholder:text-[#A0A0A0] focus:border-[#111827] focus:bg-white focus:ring-2 focus:ring-[#111827]/10"
+                                    required
+                                >
+                                <button
+                                    type="button"
+                                    class="js-password-toggle absolute right-3 top-1/2 inline-flex -translate-y-1/2 items-center gap-1 text-[12px] font-medium text-[#8B8B8B] transition-colors hover:text-[#F54900] focus:outline-none"
+                                    data-target="password"
+                                    aria-controls="password"
+                                    aria-label="Show password"
+                                    aria-pressed="false"
+                                >
+                                    <i class="fas fa-eye text-[12px]" aria-hidden="true"></i>
+                                    <span>Show</span>
+                                </button>
+                            </div>
+                            @error('password')
+                                <p class="mt-2 text-xs font-medium text-[#DC2626]">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="password_confirmation" class="mb-2 block text-[13px] font-semibold text-[#2B2B2B]">Confirm Password</label>
+                            <div class="relative">
+                                <input
+                                    id="password_confirmation"
+                                    type="password"
+                                    name="password_confirmation"
+                                    autocomplete="new-password"
+                                    placeholder="Re-enter your password"
+                                    class="w-full rounded-[7px] border border-[#E4E4E4] bg-[#F3F4F6] px-4 py-[10px] pr-14 text-[13px] text-[#1F2937] outline-none transition-all placeholder:text-[#A0A0A0] focus:border-[#111827] focus:bg-white focus:ring-2 focus:ring-[#111827]/10"
+                                    required
+                                >
+                                <button
+                                    type="button"
+                                    class="js-password-toggle absolute right-3 top-1/2 inline-flex -translate-y-1/2 items-center gap-1 text-[12px] font-medium text-[#8B8B8B] transition-colors hover:text-[#F54900] focus:outline-none"
+                                    data-target="password_confirmation"
+                                    aria-controls="password_confirmation"
+                                    aria-label="Show password"
+                                    aria-pressed="false"
+                                >
+                                    <i class="fas fa-eye text-[12px]" aria-hidden="true"></i>
+                                    <span>Show</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="mt-2 inline-flex w-full items-center justify-center rounded-[7px] bg-[#111827] px-5 py-[10px] text-[14px] font-semibold text-white transition-colors hover:bg-[#1F2937] focus:outline-none focus:ring-2 focus:ring-[#111827] focus:ring-offset-2"
+                        >
+                            Create Caterer Account
+                        </button>
+                    </form>
+
+                    <div class="mt-6 space-y-2 text-center text-[15px] leading-6 text-[#6B7280]">
+                        <p>
+                            Already have an account?
+                            <a href="{{ route('caterer.login') }}" class="font-semibold text-[#F54900] transition-colors hover:text-[#D14300]">
+                                Sign in
+                            </a>
+                        </p>
+                        <p>
+                            Are you a client?
+                            <a href="{{ route('register') }}" class="font-semibold text-[#F54900] transition-colors hover:text-[#D14300]">
+                                Sign up here
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <aside class="flex w-full bg-[linear-gradient(135deg,#111827_0%,#374151_100%)] text-white lg:min-h-screen lg:w-1/2 lg:items-center">
+            <div class="w-full px-8 py-10 sm:px-10 lg:max-w-[590px] lg:px-16 lg:py-14 xl:px-20">
+                <h2 class="text-[34px] font-extrabold leading-tight sm:text-[37px]">
+                    Build Your Catering Empire
+                </h2>
+                <p class="mt-4 max-w-[380px] text-[15px] leading-8 text-white/95">
+                    Join PlatePal's growing network of successful caterers in Tagum City and take your business to the next level.
+                </p>
+
+                <div class="mt-8 space-y-4">
+                    <div class="flex items-start gap-3">
+                        <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20 text-[9px] text-white">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <p class="text-[14px] leading-7 text-white/90">No setup fees - start for free</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20 text-[9px] text-white">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <p class="text-[14px] leading-7 text-white/90">Easy-to-use dashboard and tools</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20 text-[9px] text-white">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <p class="text-[14px] leading-7 text-white/90">Connect with local clients daily</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleButtons = document.querySelectorAll('.js-password-toggle');
+
+        toggleButtons.forEach(function (toggleButton) {
+            const targetId = toggleButton.getAttribute('data-target');
+            const passwordInput = targetId ? document.getElementById(targetId) : null;
+
+            if (!passwordInput) {
+                return;
+            }
+
+            const icon = toggleButton.querySelector('i');
+            const label = toggleButton.querySelector('span');
+
+            toggleButton.addEventListener('click', function () {
+                const isHidden = passwordInput.type === 'password';
+
+                passwordInput.type = isHidden ? 'text' : 'password';
+                toggleButton.setAttribute('aria-pressed', String(isHidden));
+                toggleButton.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+
+                if (icon) {
+                    icon.className = isHidden ? 'fas fa-eye-slash text-[12px]' : 'fas fa-eye text-[12px]';
+                }
+
+                if (label) {
+                    label.textContent = isHidden ? 'Hide' : 'Show';
+                }
+            });
+        });
+    });
+</script>
 
 </x-layouts.app>

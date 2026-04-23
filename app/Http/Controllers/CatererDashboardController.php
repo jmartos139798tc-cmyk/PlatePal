@@ -20,11 +20,12 @@ class CatererDashboardController extends Controller
     public function index()
     {
         $profile = $this->catererProfile();
+        $user = Auth::user();
 
         $stats = [
             'total_bookings' => Booking::where('caterer_profile_id', $profile->id)->count(),
             'pending_requests' => Booking::where('caterer_profile_id', $profile->id)->where('status', 'pending')->count(),
-            'messages' => Message::where('receiver_id', Auth::id())->where('is_read', false)->count(),
+            'messages' => Message::where('receiver_id', $user->id)->where('is_read', false)->count(),
             'avg_rating' => Review::where('caterer_profile_id', $profile->id)->avg('rating') ?? 0,
             'prev_month_bookings' => Booking::where('caterer_profile_id', $profile->id)
                 ->whereMonth('created_at', now()->subMonth()->month)->count(),
@@ -46,12 +47,18 @@ class CatererDashboardController extends Controller
         ];
 
         $topPackages = Package::where('caterer_profile_id', $profile->id)
-            ->withCount('bookings')
+            ->withCount([
+                'bookings',
+                'bookings as active_bookings_count' => fn ($query) => $query->whereIn('status', ['pending', 'confirmed', 'completed']),
+            ])
+            ->withSum([
+                'bookings as revenue_total' => fn ($query) => $query->where('status', '!=', 'cancelled'),
+            ], 'total_amount')
             ->orderByDesc('bookings_count')
             ->take(3)
             ->get();
 
-        return view('caterer.dashboard', compact('stats', 'upcomingBookings', 'earnings', 'topPackages'));
+        return view('caterer.dashboard', compact('stats', 'upcomingBookings', 'earnings', 'topPackages', 'profile', 'user'));
     }
 
     public function bookings()
