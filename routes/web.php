@@ -21,9 +21,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/browse', [HomeController::class, 'browse'])->name('browse');
 
 /*
-|--------------------------------------------------------------------------
+
 | Auth Page Routes
-|--------------------------------------------------------------------------
+
 */
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
