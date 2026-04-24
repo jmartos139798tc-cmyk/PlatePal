@@ -1,3 +1,5 @@
+{{-- Resources/views/shared/account-dropdown.blade.php --}}
+
 @php
     $dropdownName = $name ?? 'PlatePal User';
     $dropdownInitials = $initials ?? strtoupper(substr($dropdownName, 0, 1));

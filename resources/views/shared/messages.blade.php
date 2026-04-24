@@ -1,6 +1,5 @@
 {{-- Resources/views/shared/messages.blade.php --}}
-{{-- Using modern Blade component layout with slots --}}
-{{-- @push styles and scripts are still supported by the layout --}}
+
 <x-layouts.app :title="'Messages - PlatePal'">
 
 <!-- Navbar -->

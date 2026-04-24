@@ -1,5 +1,5 @@
 {{-- Resources/views/client/messages.blade.php --}}
-{{-- Using modern Blade component layout with slots --}}
+
 <x-layouts.app :title="'My Messages - PlatePal'">
     <div style="max-width:1200px;margin:40px auto;padding:0 20px;">
         <h1 style="font-size:28px;color:var(--dark);margin-bottom:24px;">Your Messages</h1>

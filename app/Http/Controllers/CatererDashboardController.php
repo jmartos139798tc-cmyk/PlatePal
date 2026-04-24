@@ -180,7 +180,17 @@ class CatererDashboardController extends Controller
             $data['cover_photo'] = $request->file('cover_photo')->store('caterers', 'public');
         }
 
+        // Check if profile is complete and update status
+        $wasIncomplete = $profile->profile_status === 'incomplete';
+        
         $profile->update($data);
+        
+        if ($wasIncomplete && $profile->isProfileComplete()) {
+            $profile->update([
+                'profile_status' => 'pending',
+            ]);
+            return back()->with('success', 'Profile submitted for approval! You will appear in the marketplace once approved.');
+        }
 
         return back()->with('success', 'Profile updated successfully.');
     }

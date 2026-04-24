@@ -1,3 +1,5 @@
+{{-- Resources/views/LandingPage/home.blade.php --}}
+
 <x-layouts.app :title="'Find Authentic Home Cooking'">
 
 @php

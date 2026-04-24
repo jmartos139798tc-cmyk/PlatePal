@@ -1,5 +1,5 @@
 {{-- Resources/views/Caterer/caterer-review.blade.php --}}
-{{-- Using modern Blade component layout with slots --}}
+
 <x-layouts.app :title="'Reviews - PlatePal'">
 
 <nav class="navbar">

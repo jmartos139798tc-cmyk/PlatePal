@@ -1,5 +1,5 @@
 {{-- Resources/views/Caterer/caterer-gallery.blade.php --}}
-{{-- Using modern Blade component layout with slots --}}
+
 <x-layouts.app :title="'Gallery - PlatePal'">
 
 <nav class="navbar">

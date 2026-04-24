@@ -1,5 +1,5 @@
 {{-- Resources/views/Caterer/caterer-show.blade.php --}}
-{{-- Using modern Blade component layout with slots --}}
+
 <x-layouts.app :title="($caterer->business_name ?? 'Lola Maria\'s Kitchen') . ' - PlatePal'">
 
 <nav class="navbar">

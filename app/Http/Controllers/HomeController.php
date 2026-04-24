@@ -10,6 +10,8 @@ class HomeController extends Controller
     public function index()
     {
         $featuredCaterers = CatererProfile::where('is_featured', true)
+            ->where('is_approved', true)
+            ->where('profile_status', 'approved')
             ->withCount('reviews')
             ->withAvg('reviews', 'rating')
             ->take(6)
@@ -21,6 +23,8 @@ class HomeController extends Controller
     public function browse(Request $request)
     {
         $query = CatererProfile::query()
+            ->where('is_approved', true)
+            ->where('profile_status', 'approved')
             ->withCount('reviews')
             ->withAvg('reviews', 'rating')
             ->orderByDesc('is_featured')

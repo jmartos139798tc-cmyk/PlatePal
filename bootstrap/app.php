@@ -25,9 +25,11 @@ return Application::configure(basePath: dirname(__DIR__))
                 return route('home');
             }
 
-            return $user->role === 'caterer'
-                ? route('caterer.dashboard')
-                : route('client.dashboard');
+            return match($user->role) {
+                'admin' => route('admin.dashboard'),
+                'caterer' => route('caterer.dashboard'),
+                default => route('client.dashboard'),
+            };
         });
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -25,10 +25,19 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt(array_merge($credentials, ['role' => 'client']))) {
+        // Try to authenticate without role restriction first
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
-            return redirect()->route('client.dashboard');
+            
+            $user = Auth::user();
+            
+            // Redirect based on role
+            return match($user->role) {
+                'admin' => redirect()->route('admin.dashboard'),
+                'caterer' => redirect()->route('caterer.dashboard'),
+                'client' => redirect()->route('client.dashboard'),
+                default => redirect()->route('client.dashboard'),
+            };
         }
 
         return back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
@@ -115,11 +124,14 @@ class AuthController extends Controller
             'barangay' => $data['barangay'],
             'phone' => $data['phone'],
             'email' => $data['email'],
+            'profile_status' => 'incomplete',
+            'is_approved' => false,
         ]);
 
         Auth::login($user);
 
-        return redirect()->route('caterer.dashboard');
+        return redirect()->route('caterer.profile.settings')
+            ->with('success', 'Account created! Please complete your profile to appear in the marketplace.');
     }
 
     // ── Logout ────────────────────────────────────────────────────────────

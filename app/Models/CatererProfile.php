@@ -10,7 +10,21 @@ class CatererProfile extends Model
         'user_id', 'business_name', 'slug', 'description', 'cover_photo',
         'phone', 'email', 'barangay', 'cuisine_type', 'price_min',
         'price_max', 'min_guests', 'max_guests', 'is_featured',
+        'profile_status', 'is_approved',
     ];
+
+    protected $casts = [
+        'is_featured' => 'boolean',
+        'is_approved' => 'boolean',
+    ];
+
+    public function isProfileComplete()
+    {
+        return !empty($this->description) 
+            && !empty($this->cuisine_type)
+            && !empty($this->price_min)
+            && !empty($this->price_max);
+    }
 
     public function user()
     {

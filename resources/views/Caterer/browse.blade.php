@@ -1,3 +1,5 @@
+{{-- Resources/views/Caterer/browse.blade.php --}}
+
 <x-layouts.app :title="'Browse Caterers in Tagum City'">
 
 @php

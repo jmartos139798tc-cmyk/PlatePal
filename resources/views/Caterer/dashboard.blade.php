@@ -1,3 +1,5 @@
+{{-- Resources/views/Caterer/dashboard.blade.php --}}
+
 <x-layouts.app :title="'Caterer Dashboard - PlatePal'">
 
 @php

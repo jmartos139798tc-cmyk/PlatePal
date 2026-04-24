@@ -9,6 +9,7 @@ use App\Http\Controllers\CatererDashboardController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,4 +111,19 @@ Route::middleware(['auth', 'role:caterer'])->prefix('dashboard')->name('caterer.
 Route::middleware('auth')->group(function () {
     Route::get('/messages/{userId}', [MessageController::class, 'show'])->name('messages.show');
     Route::post('/messages/{userId}', [MessageController::class, 'send'])->name('messages.send');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes (Auth + Role: admin)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/pending-caterers', [AdminController::class, 'pendingCaterers'])->name('pending.caterers');
+    Route::post('/caterers/{id}/approve', [AdminController::class, 'approveCaterer'])->name('caterers.approve');
+    Route::post('/caterers/{id}/reject', [AdminController::class, 'rejectCaterer'])->name('caterers.reject');
+    Route::get('/all-caterers', [AdminController::class, 'allCaterers'])->name('all.caterers');
+    Route::post('/caterers/{id}/toggle-featured', [AdminController::class, 'toggleFeatured'])->name('caterers.toggle.featured');
 });

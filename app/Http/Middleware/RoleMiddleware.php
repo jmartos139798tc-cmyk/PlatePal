@@ -14,6 +14,10 @@ class RoleMiddleware
             if ($role === 'caterer') {
                 return redirect()->route('caterer.login')->with('error', 'Please sign in as a caterer.');
             }
+            
+            if ($role === 'admin') {
+                return redirect()->route('login')->with('error', 'Unauthorized access.');
+            }
 
             return redirect()->route('login')->with('error', 'Please sign in to continue.');
         }
